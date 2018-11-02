@@ -1,0 +1,27 @@
+package com.deliclouds.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.deliclouds.datamodels.RestaurantLanguage;
+import com.deliclouds.repositories.RestaurantLanguageRepository;
+
+@Service
+public class RestaurantLanguageService {
+	@Autowired 
+	private RestaurantLanguageRepository repo;
+	
+	public Iterable<RestaurantLanguage> getRestaurantLanguages(){
+		return this.repo.findAll();
+	}
+	
+	public RestaurantLanguage addRestaurantLanguage(RestaurantLanguage url){
+		return this.repo.save(url);
+	}
+
+	public void delete(RestaurantLanguage rl) {
+		this.repo.delete(rl);
+	}
+
+}
+

@@ -1,0 +1,31 @@
+package com.deliclouds.datamodels;
+
+import java.io.Serializable;
+
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+
+@Embeddable
+public class RestaurantTranslationID implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	@JoinColumn(name = "language_id", referencedColumnName="language_id")
+	private Integer languageId;
+	@JoinColumn(name = "restaurant_id", referencedColumnName="restaurant_id")
+	private Integer restaurantId;
+	public RestaurantTranslationID(){}
+	public Integer getLanguageId() {
+		return languageId;
+	}
+	public void setLanguageId(Integer language) {
+		this.languageId = language;
+	}
+	public Integer getRestaurantId() {
+		return restaurantId;
+	}
+	public void setRestaurantId(Integer restaurant) {
+		this.restaurantId = restaurant;
+	}
+}

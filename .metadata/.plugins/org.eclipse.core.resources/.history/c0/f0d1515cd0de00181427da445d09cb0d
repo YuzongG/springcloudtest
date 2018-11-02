@@ -1,0 +1,5 @@
+package com.deliclouds.services;
+
+public class RestaurantLanguageService {
+
+}

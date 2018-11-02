@@ -1,0 +1,68 @@
+package com.deliclouds.services;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.deliclouds.datamodels.Language;
+import com.deliclouds.repositories.LanguageRepository;
+
+@Service
+public class LanguageService {
+
+	@Autowired
+	private LanguageRepository languageRepo;
+	private List<Language> languages;
+	
+	@PostConstruct
+	private void init(){
+		this.languages = new ArrayList<Language>();
+		for(Language l: languageRepo.findAll()){
+			this.languages.add(l);
+		}
+	}
+	
+	public Iterable<Language> getLanguages(){
+		return this.languages;
+	}
+	
+	public List<String> getLanguagesNames(){
+		List<String> res = new ArrayList<String>();
+		for(Language l: this.languages){
+			res.add(l.getName());
+		}
+		return res;
+		
+	}
+	
+	public String getNameById(int id){
+		String res = "";
+		for(Language l: this.languages){
+			if(l.getId() == id){
+				return l.getName();
+			}
+		}
+		return res;
+	}
+	
+	public Integer getIdByName(String name){
+		Integer result = -1;
+		for(Language l: this.languages){
+			if(l.getName().equals(name))
+				result = l.getId();
+		}
+		return result;
+	}
+	
+	public Language getLanguageByName(String name){
+		for(Language l: this.languages){
+			if(l.getName().equals(name))
+				return l;
+		}
+		return null;
+	}
+}

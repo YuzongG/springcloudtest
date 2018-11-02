@@ -1,0 +1,5 @@
+package com.deliclouds.datamodels;
+
+public class Restaurant {
+
+}

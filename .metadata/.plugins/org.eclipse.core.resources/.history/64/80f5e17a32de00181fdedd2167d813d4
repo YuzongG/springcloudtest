@@ -1,0 +1,6 @@
+package com.deliclouds.repositories;
+
+public interface LanguageRepository extends CrudRepository<Language, Integer>{
+
+}
+

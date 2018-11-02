@@ -1,0 +1,94 @@
+package com.deliclouds.controllers;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.deliclouds.datamodels.Language;
+import com.deliclouds.datamodels.RestaurantLanguage;
+import com.deliclouds.services.LanguageService;
+import com.deliclouds.services.RestaurantLanguageService;
+
+@RestController
+@RequestMapping("/public/users")
+public class LanguageController {
+
+	@Autowired
+	private LanguageService service;
+	@Autowired
+	private RestaurantLanguageService restaurantLanguageService;
+	private Map<Integer, List<Language>> restaurantLanguageMap;
+	private List<Language> languages;
+
+	@PostConstruct
+	private void init(){
+		languages = new ArrayList<Language>();
+		Iterable<Language> languageIterable = this.service.getLanguages();
+		for (Language i : languageIterable) {
+			this.languages.add(i);
+		}		
+		
+		restaurantLanguageMap = new HashMap<Integer, List<Language>>();
+		Iterable<RestaurantLanguage> restaurantLanguages = this.restaurantLanguageService.getRestaurantLanguages();
+		for (RestaurantLanguage i : restaurantLanguages) {
+			if (restaurantLanguageMap.get(i.getId().getRestaurantId()) == null) {
+				List<Language> list = new ArrayList<Language>();
+				for (Language j : languages) {
+					if (j.getId().equals(i.getId().getLanguageId())) {
+						list.add(j);
+						break;
+					}
+				}
+				this.restaurantLanguageMap.put(i.getId().getRestaurantId(), list);
+			} else {
+				List<Language> list = restaurantLanguageMap.get(i.getId().getRestaurantId());
+				for (Language j : languages) {
+					if (j.getId().equals(i.getId().getLanguageId())) {
+						list.add(j);
+						break;
+					}
+				}
+				this.restaurantLanguageMap.put(i.getId().getRestaurantId(), list);
+			}
+		}
+	}
+	
+
+	@RequestMapping("/getLanguages")
+	// @CrossOrigin(origins="http://localhost:3000")
+	@CrossOrigin(origins = "*")
+	public Iterable<Language> getLanguages() {
+		return languages;
+	}
+
+	@RequestMapping("/getLanguages/{id}")
+	@CrossOrigin(origins = "*")
+	public Iterable<Language> getLanguagesByRestaurantId(@PathVariable int id) {
+		if (this.restaurantLanguageMap.get(id) == null) {
+			return this.languages;
+		}
+		return this.restaurantLanguageMap.get(id);
+	}
+
+	@RequestMapping("/addLanguagesToRestaurant/{id}")
+	@CrossOrigin(origins = "*")
+	public void addLanguagesByRestaurantId(@RequestBody List<RestaurantLanguageID> reslanguages, @PathVariable int id) {
+		for (RestaurantLanguageID i : reslanguages) {
+			System.out.println(i.getLanguageId());
+			System.out.println(i.getLanguageId());
+			RestaurantLanguage j = new RestaurantLanguage();
+			j.setId(i);	
+			this.service.addRestaurantLanguage(j);
+		}
+	}
+}
+
